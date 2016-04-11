@@ -4,14 +4,26 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
   
     <title>Global Hotkeys Manager</title>
-    <script type="text/javascript" charset="utf-8">
-      HOTKEYS = <%= hotkeys %>;
-    </script>
+    <style>form {display: inline; }</style>
   </head>
 
   <body>
-    <div id=list></div>
-    <div><button id="capture">Capture new window</button>
+    <div id=list>
+      <% hotkeys.each do |(id, name, key, mapped)| %>
+        <div>
+          <input data-id=<%= id %> type=text class=js-name size=30 value="<%= name %>" />
+          <form method=post action="/update_key/<%= id %>">
+            <button type=submit >Change key</button>
+          </form>
+          (<%= key %>)
+        </div>
+      <% end -%>
+    </div>
+    <div>
+      <form method=post action="/capture">
+        <button type=submit >Capture new window</button>
+      </form>
+    </div>
 
     <script type="text/javascript" charset="utf-8" src="/index.js"></script>
   </body>

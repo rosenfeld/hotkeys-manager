@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'sinatra/reloader'
-require 'json'
 
 require_relative 'lib/hotkeys_manager'
 
@@ -10,7 +9,7 @@ class Main < Sinatra::Base
   end
 
   get '/' do
-    erb :index, layout: false, locals: {hotkeys: JSON.unparse(HotkeysManager.hotkeys)}
+    erb :index, layout: false, locals: { hotkeys: HotkeysManager.hotkeys }
   end
 
   post '/toggle/:id' do
@@ -25,11 +24,12 @@ class Main < Sinatra::Base
 
   post '/update_key/:id' do
     HotkeysManager.update_key Integer(params[:id])
-    halt 200
+    redirect '/'
   end
 
   post '/capture' do
     HotkeysManager.grab_window
+    redirect '/'
   end
 
   # start the server if ruby file executed directly
