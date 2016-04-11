@@ -39,7 +39,7 @@ class HotkeysManager
   end
 
   def self.toggle(wid)
-    newstate = []
+    new_state = []
     hotkeys.each do |(id, name, key, mapped)|
       if id == wid
         mapped = !mapped
@@ -50,9 +50,9 @@ class HotkeysManager
           `xdotool windowunmap #{id}`
         end
       end
-      newstate.push [id, name, key, mapped]
+      new_state.push [id, name, key, mapped]
     end
-    update_config newstate
+    update_config new_state
   end
 
   def self.update_config(hotkeys)
@@ -65,29 +65,39 @@ class HotkeysManager
   end
 
   def self.update_name(wid, new_name)
-    newstate = []
+    new_state = []
     hotkeys.each do |(id, name, key, mapped)|
       name = new_name if id == wid
-      newstate.push [id, name, key, mapped]
+      new_state.push [id, name, key, mapped]
     end
-    update_config newstate
+    update_config new_state
   end
 
   def self.update_key(wid)
-    newkey = ask_for_key
-    newstate = []
+    new_key = ask_for_key
+    new_state = []
     hotkeys.each do |(id, name, key, mapped)|
-      key = newkey if id == wid
-      newstate.push [id, name, key, mapped]
+      key = new_key if id == wid
+      new_state.push [id, name, key, mapped]
     end
-    update_config newstate
+    update_config new_state
   end
 
   def self.grab_window
-    id = `xdotool selectwindow`.to_i
-    newkey = ask_for_key
-    name = `xdotool getwindowname #{id}`
-    update_config(hotkeys + [[id, name, newkey, true]])
+    wid = `xdotool selectwindow`.to_i
+    new_key = ask_for_key
+    new_name = `xdotool getwindowname #{wid}`
+    new_state = []
+    updated = false
+    hotkeys.each do |(id, name, key, mapped)|
+      if id == wid
+        updated = true
+        key = new_key
+      end
+      new_state.push [id, name, key, mapped]
+    end
+    new_state.push [wid, new_name, new_key, true] unless updated
+    update_config new_state
   end
 
   def self.ask_for_key
