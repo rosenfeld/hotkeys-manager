@@ -1,2 +1,2 @@
 #!/bin/sh
-rackup -p 4242 -E production -D
+rackup -p 4242 -E production -D -P server.pid
