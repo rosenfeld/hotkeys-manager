@@ -1,0 +1,2 @@
+#!/bin/sh
+rackup -p 4242 -E production -D
