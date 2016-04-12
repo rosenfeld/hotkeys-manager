@@ -35,7 +35,6 @@ them.
 - xbindkeys
 - xwininfo (from x11-utils package)
 - Ruby
-- sinatra and sinatra-contrib (installed from bundle)
 
 ## Install
 
