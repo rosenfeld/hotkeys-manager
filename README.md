@@ -37,6 +37,8 @@ them.
 - Ruby
 - sinatra and sinatra-contrib (installed from bundle)
 
+## Install
+
     sudo apt-get install xdotool x11-utils xbindkeys ruby
     gem install global_hotkeys_manager
 
