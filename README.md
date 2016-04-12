@@ -34,10 +34,12 @@ them.
 - xdotool
 - xbindkeys
 - xwininfo (from x11-utils package)
+- curl
 - Ruby
 - sinatra and sinatra-contrib (installed from bundle)
 
-    sudo apt-get install xdotool x11-utils xbindkeys ruby
+    sudo apt-get install xdotool x11-utils xbindkeys curl ruby
+    gem install bundler
     bundle
 
 ## Usage
