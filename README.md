@@ -34,35 +34,32 @@ them.
 - xdotool
 - xbindkeys
 - xwininfo (from x11-utils package)
-- curl
 - Ruby
 - sinatra and sinatra-contrib (installed from bundle)
 
-    sudo apt-get install xdotool x11-utils xbindkeys curl ruby
-    gem install bundler
-    bundle
+    sudo apt-get install xdotool x11-utils xbindkeys ruby
+    gem install global_hotkeys_manager
 
 ## Usage
 
-    ./run # or rackup -p 4242
+    global_hotkeys_manager (simply start the daemon)
 
-Access the UI through http://localhost:4242
+Other commands:
+
+    global_hotkeys_manager help
+    global_hotkeys_manager status
+    global_hotkeys_manager stop
+    global_hotkeys_manager toggle window_id (used internally)
+    global_hotkeys_manager debug (like start but not in daemon mode)
+
+Access the UI through http://127.0.0.1:4242
 
 I also found useful to assign a global shortcut for accessing this address in Chrome any time I
 want to add a new window. Just add something like this to your ~/.xbindkeysrc:
 
-"google-chrome --app=http://localhost:4242 && sleep 0.2 && xdotool search "Global Hotkeys Manager" windowactivate "
+"google-chrome --app=http://127.0.0.1:4242 && sleep 0.2 && xdotool search "Global Hotkeys Manager" windowactivate "
     m:0x19 + c:58
     Shift+Alt+Mod2 + m
 
 All hotkeys managed by this application uses a separate configuration file rather than
-~/.xbindkeysrc.
-
-## TODO
-
-Currently the application assumes it will run on localhost:4242. We should make this configurable
-at some point.
-
-Also, the source code is not as much clean as it could be. There are some methods not being used
-yet, which I intend to support at some point once I feel the need (like adding a button to show
-all managed windows).
+~/.xbindkeysrc (~/.config/global-hotkeys-manager/xbindkeysrc).

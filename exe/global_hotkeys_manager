@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+require 'global_hotkeys_manager'
+require 'global_hotkeys_manager/web_app'
+
+unless ['xbindkeys', 'xwininfo', 'xdotool'].all?{|app| system "which #{app} > /dev/null"}
+  puts "The following tools are required to be installed for this app to work:
+  - xbindkeys
+  - xwininfo (from x11-utils package)
+  - xdotool"
+  exit -1
+end
+
+PID_FILE = "#{GlobalHotkeysManager::CONFIG_DIR}/server.pid"
+
+_pid = nil
+def pid
+  _pid ||= Integer(File.read PID_FILE)
+end
+
+def running?
+  return false unless File.exist? PID_FILE
+  Process.kill 0, pid
+  true
+rescue => e
+  puts "invalid PID: #{e.message} (deleted pid file)"
+  File.delete PID_FILE
+  false
+end
+
+def stop
+  GlobalHotkeysManager.stop
+  exit 0 unless running?
+  Process.kill 'SIGINT', pid
+end
+
+def start
+  exit 0 if running?
+  Process.daemon unless ARGV[0] == 'debug'
+  File.write PID_FILE, Process.pid
+  at_exit{ File.delete PID_FILE }
+  GlobalHotkeysManager.ensure_running
+  GlobalHotkeysManager::WebApp.run! environment: 'production'
+end
+
+case ARGV[0]
+when 'help'
+  puts %q{running without arguments will start the application daemons. Available commands:
+  status - report current status
+  stop - stop the daemon
+  toggle window_id - used internally
+  debug - start in no daemon mode
+  The default port is 4242 and can be overriden with the environment variable
+  HOTKEYS_MANAGER_PORT. Eg.: HOTKEYS_MANAGER_PORT=4444 global_hotkeys_manager}
+when 'toggle' then GlobalHotkeysManager.toggle Integer(ARGV[1])
+when 'status' then puts running? ? 'running' : 'stopped'
+when 'stop' then stop
+when 'restart' then (stop; sleep 1; start)
+when nil, 'debug', 'start' then start
+else
+  puts "unknown command: #{ARGV[0]}"
+end

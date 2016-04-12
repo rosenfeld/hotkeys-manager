@@ -1,11 +1,17 @@
 require 'json'
+require 'fileutils'
 
-class HotkeysManager
-  CONFIG_DIR = File.expand_path '../config', __dir__
+require_relative 'global_hotkeys_manager/version'
+
+module GlobalHotkeysManager
+  CONFIG_DIR = File.expand_path '~/.config/global-hotkeys-manager'
   XBINDKEYSRC = "#{CONFIG_DIR}/xbindkeysrc"
   HOTKEYS_JSON = "#{CONFIG_DIR}/hotkeys.json"
-  PORT = 4242
-  URL_BASE = "http://localhost:#{PORT}"
+  PORT = ENV['HOTKEYS_MANAGER_PORT'] || 4242
+  HOST = '127.0.0.1'
+  URL_BASE = "http://#{HOST}:#{PORT}"
+
+  FileUtils.mkdir_p CONFIG_DIR
 
   def self.pid
     return unless pid = `pgrep -o -f xbindkeys.*hotkeys`.split("\n").find{|p| system "kill -0 #{p}"}
@@ -14,7 +20,7 @@ class HotkeysManager
 
   def self.ensure_running
     id = pid and `kill #{id}`
-    `xbindkeys -f #{XBINDKEYSRC}`
+    `[ -f #{XBINDKEYSRC} ] && xbindkeys -f #{XBINDKEYSRC}`
   end
 
   def self.stop
@@ -59,7 +65,9 @@ class HotkeysManager
     hotkeys = hotkeys.find_all{|(id, name, key, mapped)| valid_window_id? id}
     File.write HOTKEYS_JSON, JSON.unparse(hotkeys)
     File.write XBINDKEYSRC, hotkeys.map{|(id, name, key, mapped)|
-      %Q{\##{name}\n"curl -X POST #{URL_BASE}/toggle/#{id}"\n#{key}\n}
+      # webrick has a bug and require content-length to be sent
+      # using curl is faster but in case it's not installed we fall back to the command line
+      %Q{\##{name}\n"curl -H 'Content-Length: 0' -X POST #{URL_BASE}/toggle/#{id} || global_hotkeys_manager toggle #{id}"\n#{key}\n}
     }.join("\n\n")
     ensure_running
   end
@@ -104,3 +112,4 @@ class HotkeysManager
     `xbindkeys -k`.split("\n").last
   end
 end
+
