@@ -1,2 +1,3 @@
-config/hotkeys.json
-config/xbindkeysrc
+/config/hotkeys.json
+/config/xbindkeysrc
+/server.pid
