@@ -37,8 +37,12 @@ def stop
 end
 
 def start
-  exit 0 if running?
-  Process.daemon unless (debug_mode = ARGV[0] == 'debug')
+  debug_mode = ARGV[0] == 'debug'
+  if running?
+    puts "The daemon is currently running, please stop it first" if debug_mode
+    exit 0
+  end
+  Process.daemon unless debug_mode
   GlobalHotkeysManager::SETTINGS[:debug] = true if debug_mode
   File.write PID_FILE, Process.pid
   at_exit{ File.delete PID_FILE }
