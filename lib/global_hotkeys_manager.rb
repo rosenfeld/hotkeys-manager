@@ -13,6 +13,7 @@ module GlobalHotkeysManager
   URL_BASE = "http://#{HOST}:#{PORT}"
 
   FileUtils.mkdir_p CONFIG_DIR
+  File.write XBINDKEYSRC, '' unless File.exist? XBINDKEYSRC # so that xbindkeys -k does not fail
 
   def self.pid
     return unless pid = `pgrep -o -f xbindkeys.*hotkeys`.split("\n").find{|p| system "kill -0 #{p}"}
@@ -110,7 +111,7 @@ module GlobalHotkeysManager
   end
 
   def self.ask_for_key
-    `xbindkeys -k`.split("\n").last
+    `xbindkeys -f #{XBINDKEYSRC} -k`.split("\n").last
   end
 end
 
