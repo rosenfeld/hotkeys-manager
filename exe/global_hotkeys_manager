@@ -59,6 +59,7 @@ when 'help'
   stop - stop the daemon
   toggle window_id - used internally
   debug - start in no daemon mode
+  version - display the current version
   The default port is 4242 and can be overriden with the environment variable
   HOTKEYS_MANAGER_PORT. Eg.: HOTKEYS_MANAGER_PORT=4444 global_hotkeys_manager}
 when 'toggle' then GlobalHotkeysManager.toggle Integer(ARGV[1])

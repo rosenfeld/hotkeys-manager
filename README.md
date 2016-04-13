@@ -56,6 +56,7 @@ Other commands:
     global_hotkeys_manager stop
     global_hotkeys_manager toggle window_id (used internally)
     global_hotkeys_manager debug (like start but not in daemon mode)
+    global_hotkeys_manager version
 
 Access the UI through http://127.0.0.1:4242
 
