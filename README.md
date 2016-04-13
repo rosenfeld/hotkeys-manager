@@ -43,7 +43,11 @@ them.
 
 ## Usage
 
-    global_hotkeys_manager (simply start the daemon)
+    global_hotkeys_manager (simply start the daemon at port 4242)
+
+To change the port simply set the `HOTKEYS_MANAGER_PORT` environment variable:
+
+    HOTKEYS_MANAGER_PORT=4444 global_hotkeys_manager
 
 Other commands:
 
