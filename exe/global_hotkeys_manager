@@ -36,14 +36,15 @@ end
 
 def start
   exit 0 if running?
-  Process.daemon unless ARGV[0] == 'debug'
+  Process.daemon unless (debug_mode = ARGV[0] == 'debug')
   File.write PID_FILE, Process.pid
   at_exit{ File.delete PID_FILE }
   GlobalHotkeysManager.ensure_running
-  GlobalHotkeysManager::WebApp.run! environment: 'production'
+  GlobalHotkeysManager::WebApp.run! environment: (debug_mode ? 'development' : 'production')
 end
 
 case ARGV[0]
+when 'version' then puts GlobalHotkeysManager::VERSION
 when 'help'
   puts %q{running without arguments will start the application daemons. Available commands:
   status - report current status

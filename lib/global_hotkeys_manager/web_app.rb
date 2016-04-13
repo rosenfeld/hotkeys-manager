@@ -1,5 +1,4 @@
 require 'sinatra/base'
-require 'sinatra/reloader'
 require 'tilt/erb'
 
 require_relative '../global_hotkeys_manager'
@@ -7,7 +6,12 @@ require_relative '../global_hotkeys_manager'
 module GlobalHotkeysManager
   class WebApp < Sinatra::Base
     configure :development do
-      register Sinatra::Reloader
+      begin
+        require 'sinatra/reloader'
+        register Sinatra::Reloader
+      rescue Exception => e
+        puts 'For auto-reload to work sinatra-contrib gem must be installed'
+      end
     end
 
     configure do
