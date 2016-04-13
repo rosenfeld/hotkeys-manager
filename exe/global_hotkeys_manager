@@ -58,5 +58,5 @@ when 'stop' then stop
 when 'restart' then (stop; sleep 1; start)
 when nil, 'debug', 'start' then start
 else
-  puts "unknown command: #{ARGV[0]}"
+  puts "unknown command: #{ARGV[0]}. Type 'global_hotkeys_manager help' for supported commands."
 end
