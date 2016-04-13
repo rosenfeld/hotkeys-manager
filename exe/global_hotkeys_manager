@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
+# to allow running the development checkout:
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+
 require 'global_hotkeys_manager'
-require 'global_hotkeys_manager/web_app'
 
 unless ['xbindkeys', 'xwininfo', 'xdotool'].all?{|app| system "which #{app} > /dev/null"}
   puts "The following tools are required to be installed for this app to work:
@@ -37,10 +39,12 @@ end
 def start
   exit 0 if running?
   Process.daemon unless (debug_mode = ARGV[0] == 'debug')
+  GlobalHotkeysManager::SETTINGS[:debug] = true if debug_mode
   File.write PID_FILE, Process.pid
   at_exit{ File.delete PID_FILE }
   GlobalHotkeysManager.ensure_running
-  GlobalHotkeysManager::WebApp.run! environment: (debug_mode ? 'development' : 'production')
+  require 'global_hotkeys_manager/web_app'
+  GlobalHotkeysManager::WebApp.run!
 end
 
 case ARGV[0]

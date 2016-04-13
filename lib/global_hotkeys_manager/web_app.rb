@@ -5,18 +5,19 @@ require_relative '../global_hotkeys_manager'
 
 module GlobalHotkeysManager
   class WebApp < Sinatra::Base
-    configure :development do
-      begin
-        require 'sinatra/reloader'
-        register Sinatra::Reloader
-      rescue Exception => e
-        puts 'For auto-reload to work sinatra-contrib gem must be installed'
-      end
-    end
-
     configure do
+      set :environment, :production
       set :port, GlobalHotkeysManager::PORT
       set :bind, GlobalHotkeysManager::HOST
+      if GlobalHotkeysManager::SETTINGS[:debug]
+        set :environment, :development
+        begin
+          require 'sinatra/reloader'
+          register Sinatra::Reloader
+        rescue Exception => e
+          puts 'For auto-reload to work sinatra-contrib gem must be installed'
+        end
+      end
     end
 
     get '/' do

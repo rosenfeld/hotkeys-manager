@@ -4,6 +4,7 @@ require 'fileutils'
 require_relative 'global_hotkeys_manager/version'
 
 module GlobalHotkeysManager
+  SETTINGS = {}
   CONFIG_DIR = File.expand_path '~/.config/global-hotkeys-manager'
   XBINDKEYSRC = "#{CONFIG_DIR}/xbindkeysrc"
   HOTKEYS_JSON = "#{CONFIG_DIR}/hotkeys.json"
