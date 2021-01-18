@@ -3,6 +3,8 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'global_hotkeys_manager/version'
 
+SINATRA_VERSION = '2.1.0'
+
 Gem::Specification.new do |spec|
   spec.name          = 'global_hotkeys_manager'
   spec.version       = GlobalHotkeysManager::VERSION
@@ -19,9 +21,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'sinatra', '1.4.7'
-  spec.add_development_dependency 'sinatra-contrib', '1.4.7'
+  spec.add_runtime_dependency 'sinatra', SINATRA_VERSION
+  spec.add_development_dependency 'sinatra-contrib', SINATRA_VERSION
 
-  spec.add_development_dependency 'bundler', '~> 1.11'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'bundler', '~> 2.2.3'
+  spec.add_development_dependency 'rake', '~> 13.0.3'
 end
